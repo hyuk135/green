@@ -1,0 +1,36 @@
+library(data.table)
+library(dplyr)
+library(sf)
+library(mapview)
+
+mycrs <- '+proj=longlat +datum=WGS84'
+
+ x=project$LON
+ y=project$LAN
+
+map_points <- 
+ data.frame(x,y) %>%
+ rowwise %>%
+ do(geometry = st_point(c(.$x,.$y))) %>%
+ ungroup %>%
+ st_as_sf(crs=mycrs) 
+
+map_points$병원명 = project$병원명
+map_points$병원급 = project$병원급
+map_points$기관번호 = project$기관번호
+map_points$일반검진 = project$일반검진
+map_points$영유아검진 = project$영유아검진
+map_points$위암검진 = project$위암검진
+map_points$대장암검진 = project$대장암검진
+map_points$자궁경부암검진 = project$자궁경부암검진
+map_points$유방암검진 = project$유방암검진
+map_points$구강검진 = project$구강검진
+map_points$간암검진 = project$간암검진
+map_points$전화번호 = project$전화번호
+map_points$주소 = project$주소
+map_points$level = project$병원급
+
+colors = colorRampPalette(c("red2", "firebrick","blue","yellow1","yellow3"))
+
+map_points %>% 
+ mapview(zcol = 'level', cex=5, alpha=.5, col.region =  colors)
